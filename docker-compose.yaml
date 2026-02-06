@@ -1,0 +1,42 @@
+services:
+  api:
+    build:
+      context: .
+      dockerfile: docker/fastapi.Dockerfile
+    container_name: life365-search-api
+    ports:
+      - "8000:8000"
+    environment:
+      ENVIRONMENT: local
+      DEBUG: "true"
+      OPENSEARCH_HOST: http://opensearch:9200
+      RABBITMQ_URL: amqp://guest:guest@rabbitmq:5672//
+    depends_on:
+      - opensearch
+      - rabbitmq
+    volumes:
+      - ./app:/app/app
+    restart: unless-stopped
+
+  opensearch:
+    image: opensearchproject/opensearch:3.4.0
+    container_name: life365-opensearch
+    environment:
+      - discovery.type=single-node
+      - DISABLE_SECURITY_PLUGIN=true
+    ports:
+      - "9200:9200"
+    volumes:
+      - opensearch-data:/usr/share/opensearch/data
+    restart: unless-stopped
+
+  rabbitmq:
+    image: rabbitmq:4.2.1-management
+    container_name: life365-rabbitmq
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    restart: unless-stopped
+
+volumes:
+  opensearch-data:
