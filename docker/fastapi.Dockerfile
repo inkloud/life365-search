@@ -1,4 +1,4 @@
-FROM python:3.14.2
+FROM python:3.14.3
 LABEL maintainer="Luca Bacchi <bacchilu@gmail.com> (https://github.com/bacchilu)"
 
 RUN pip3 install poetry
