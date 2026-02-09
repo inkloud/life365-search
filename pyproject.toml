@@ -30,3 +30,5 @@ respx = "^0.22.0"
 ruff = "^0.15.0"
 mypy = "^1.19.1"
 
+[tool.pytest.ini_options]
+pythonpath = ["."]
