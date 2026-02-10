@@ -12,15 +12,15 @@ RUN useradd -m -u ${USER_ID} -g ${USERNAME} ${USERNAME}
 
 WORKDIR /app
 
-RUN chown -R ${USERNAME}:${USERNAME} /app
-USER ${USERNAME}
+COPY requirements.txt /app/
 
-COPY pyproject.toml poetry.lock README.md /app/
-
-RUN poetry install --no-root
+RUN pip3 install -r requirements.txt
 
 COPY app /app/app
 
+RUN chown -R ${USERNAME}:${USERNAME} /app
+USER ${USERNAME}
+
 EXPOSE 8000
 
-CMD ["poetry", "run", "uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
+CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]

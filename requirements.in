@@ -1,0 +1,14 @@
+fastapi
+uvicorn
+pydantic
+pydantic-settings
+httpx
+celery
+opensearch-py
+
+pytest
+pytest-asyncio
+pytest-cov
+respx
+ruff
+mypy
