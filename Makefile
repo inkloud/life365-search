@@ -1,21 +1,19 @@
-.PHONY: help venv test api-up lint clean docker-up docker-down upgrade
+.PHONY: venv test api-up clean docker-up docker-down upgrade
 
-help:
-	@echo "Targets: venv test api-up lint clean docker-up docker-down upgrade"
+export USER_ID := $(shell id -u)
+export GROUP_ID := $(shell id -g)
+
+upgrade:
+	rm -f requirements.txt
+	uv venv
+	uv pip compile requirements.in > requirements.txt
+	uv pip sync requirements.txt
+	rm .venv/.gitignore
 
 venv:
 	uv venv
 	uv pip sync requirements.txt
 	rm .venv/.gitignore
-
-test:
-	uv run pytest
-
-api-up:
-	uv run uvicorn app.main:app --reload
-
-lint:
-	uv run ruff check .
 
 clean:
 	find . -type f -name "*.pyc" -delete
@@ -24,15 +22,15 @@ clean:
 	find . -type d -name ".mypy_cache" -prune -exec rm -rf {} +
 	rm -f uv.lock
 
+test:
+	uv run pytest
+
+api-up:
+	uv run uvicorn app.main:app --reload
+
 docker-up:
 	docker compose up
 
 docker-down:
 	docker compose down -v
 	docker image prune -a
-
-upgrade:
-	rm -f requirements.txt
-	uv venv
-	uv pip compile requirements.in > requirements.txt
-	rm .venv/.gitignore
