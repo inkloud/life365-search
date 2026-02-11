@@ -1,3 +1,6 @@
+from collections.abc import AsyncIterator
+from contextlib import asynccontextmanager
+
 from opensearchpy import AsyncOpenSearch
 
 from app.settings import Settings, get_settings
@@ -22,3 +25,12 @@ class OpenSearchClient:
 
     async def close(self) -> None:
         await self._client.close()
+
+
+@asynccontextmanager
+async def opensearch_client_context() -> AsyncIterator[AsyncOpenSearch]:
+    os_client: OpenSearchClient = OpenSearchClient()
+    try:
+        yield os_client.client
+    finally:
+        await os_client.close()
