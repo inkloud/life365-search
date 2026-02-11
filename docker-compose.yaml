@@ -15,15 +15,17 @@ services:
       OPENSEARCH_HOST: http://opensearch:9200
       RABBITMQ_URL: amqp://guest:guest@rabbitmq:5672//
     depends_on:
-      - opensearch
-      - rabbitmq
+      opensearch:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
     volumes:
       - ./app:/app/app
     command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
     restart: unless-stopped
 
   opensearch:
-    image: opensearchproject/opensearch:3.4.0
+    image: opensearchproject/opensearch:3.5.0
     container_name: life365-opensearch
     environment:
       - discovery.type=single-node
@@ -32,6 +34,12 @@ services:
       - "9200:9200"
     volumes:
       - opensearch-data:/usr/share/opensearch/data
+    healthcheck:
+      test: ["CMD-SHELL", "curl -fsS http://localhost:9200/_cluster/health?wait_for_status=yellow&timeout=5s >/dev/null || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
     restart: unless-stopped
 
   rabbitmq:
@@ -40,6 +48,11 @@ services:
     ports:
       - "5672:5672"
       - "15672:15672"
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "-q", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
     restart: unless-stopped
 
 volumes:
