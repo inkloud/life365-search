@@ -1,18 +1,29 @@
 import asyncio
 from collections.abc import Awaitable
 
-from app.domain.category import CategoryPath
+from app.domain.category import CategoryNode, CategoryPath, extract_level_3_paths
 from app.domain.product import Product
 from app.infrastructure.life365_api.client import Life365ApiClient
-from app.infrastructure.life365_api.mappers import ProductDTO, map_product
+from app.infrastructure.life365_api.dto import CategoryDTO, ProductDTO
+from app.infrastructure.life365_api.mappers import map_category, map_product
+from app.infrastructure.opensearch.bulk_indexer import BulkIndexer
+from app.infrastructure.opensearch.index_manager import IndexManager
 
 
 class IndexingService:
-    def __init__(self, api_client: Life365ApiClient):
+    def __init__(
+        self,
+        api_client: Life365ApiClient,
+        index_manager: IndexManager,
+        bulk_indexer: BulkIndexer,
+        max_concurrency: int = 5,
+    ):
         self._api_client: Life365ApiClient = api_client
-        self._max_concurrency: int = 5
+        self._index_manager = index_manager
+        self._bulk_indexer = bulk_indexer
+        self._max_concurrency: int = max_concurrency
 
-    async def fetch_products_for_categories(
+    async def _fetch_all_products(
         self, category_paths: list[CategoryPath]
     ) -> list[Product]:
         semaphore: asyncio.Semaphore = asyncio.Semaphore(self._max_concurrency)
@@ -30,3 +41,19 @@ class IndexingService:
         results: list[list[Product]] = await asyncio.gather(*tasks)
 
         return [product for sublist in results for product in sublist]
+
+    async def reindex_all(self) -> str:
+        version: int = await self._index_manager.get_next_version()
+        index_name: str = await self._index_manager.create_index(version)
+
+        category_dtos: list[CategoryDTO] = await self._api_client.get_categories_tree()
+        roots: list[CategoryNode] = [map_category(dto) for dto in category_dtos]
+        category_paths: list[CategoryPath] = extract_level_3_paths(roots)
+
+        products: list[Product] = await self._fetch_all_products(category_paths)
+
+        await self._bulk_indexer.bulk_index(index_name, products)
+
+        await self._index_manager.switch_alias(index_name)
+
+        return index_name
