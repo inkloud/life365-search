@@ -8,7 +8,7 @@ class CategoryTitle:
     cn: str | None = None
 
     @classmethod
-    def from_dict(cls, data: dict[str, str]) -> "CategoryTitle":
+    def from_dict(cls, data: dict[str, str | None]) -> "CategoryTitle":
         return cls(it=data.get("it"), en=data.get("en"), cn=data.get("cn"))
 
 

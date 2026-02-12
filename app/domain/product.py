@@ -11,7 +11,7 @@ class MultilingualText:
     cn: str | None = None
 
     @classmethod
-    def from_dict(cls, data: dict[str, str]) -> "MultilingualText":
+    def from_dict(cls, data: dict[str, str | None]) -> "MultilingualText":
         return cls(it=data.get("it"), en=data.get("en"), cn=data.get("cn"))
 
     def best_for(self, lang: str) -> str | None:
