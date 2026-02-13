@@ -18,6 +18,8 @@ class Settings(BaseSettings):
 
     rabbitmq_url: str = "amqp://guest:guest@rabbitmq:5672//"
 
+    debug: bool = False
+
     model_config = SettingsConfigDict(
         env_file=".env", env_file_encoding="utf-8", extra="ignore"
     )

@@ -1,8 +1,10 @@
 from typing import Any
 
 from opensearchpy import AsyncOpenSearch
+from opensearchpy.exceptions import OpenSearchException
 
 from app.domain.search import SearchHit, SearchQuery, SearchResult
+from app.services.exceptions import SearchUnavailableError
 from app.services.search_repository import SearchRepository
 from app.settings import get_settings
 
@@ -82,7 +84,10 @@ class OpenSearchRepository(SearchRepository):
             "sort": self._build_sort(query),
         }
 
-        response = await self._client.search(index=self._alias, body=body)
+        try:
+            response = await self._client.search(index=self._alias, body=body)
+        except OpenSearchException:
+            raise SearchUnavailableError("OpenSearch query failed")
 
         total = response["hits"]["total"]["value"]
         hits = response["hits"]["hits"]

@@ -1,6 +1,7 @@
 import pytest
 
 from app.domain.search import SearchQuery, SearchResult
+from app.services.exceptions import InvalidSearchRequestError
 from app.services.search_repository import SearchRepository
 from app.services.search_service import SearchService
 
@@ -16,5 +17,5 @@ class FakeRepo(SearchRepository):
 async def test_page_validation():
     service: SearchService = SearchService(FakeRepo())
 
-    with pytest.raises(ValueError):
+    with pytest.raises(InvalidSearchRequestError):
         await service.search(SearchQuery(page=0))
