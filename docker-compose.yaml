@@ -43,7 +43,7 @@ services:
     restart: unless-stopped
 
   rabbitmq:
-    image: rabbitmq:4.2.1-management
+    image: rabbitmq:4.2.4-management
     container_name: life365-rabbitmq
     ports:
       - "5672:5672"

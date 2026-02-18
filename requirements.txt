@@ -75,7 +75,7 @@ iniconfig==2.3.0
     # via pytest
 kombu==5.6.2
     # via celery
-librt==0.8.0
+librt==0.8.1
     # via mypy
 multidict==6.7.1
     # via
@@ -164,7 +164,7 @@ urllib3==2.6.3
     # via
     #   opensearch-py
     #   requests
-uvicorn==0.40.0
+uvicorn==0.41.0
     # via -r requirements.in
 vine==5.1.0
     # via
