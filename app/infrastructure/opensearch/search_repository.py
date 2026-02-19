@@ -1,3 +1,4 @@
+import logging
 from typing import Any
 
 from opensearchpy import AsyncOpenSearch
@@ -7,6 +8,8 @@ from app.domain.search import SearchHit, SearchQuery, SearchResult
 from app.services.exceptions import SearchUnavailableError
 from app.services.search_repository import SearchRepository
 from app.settings import get_settings
+
+logger = logging.getLogger(__name__)
 
 
 class OpenSearchRepository(SearchRepository):
@@ -84,6 +87,13 @@ class OpenSearchRepository(SearchRepository):
             "sort": self._build_sort(query),
         }
 
+        logger.debug(
+            "Executing search | text=%s | page=%d | size=%d",
+            query.text,
+            query.page,
+            query.page_size,
+        )
+
         try:
             response = await self._client.search(index=self._alias, body=body)
         except OpenSearchException:
@@ -91,6 +101,8 @@ class OpenSearchRepository(SearchRepository):
 
         total = response["hits"]["total"]["value"]
         hits = response["hits"]["hits"]
+
+        logger.debug("Search returned %d results", total)
 
         results: list[SearchHit] = [self._map_hit(hit, query.language) for hit in hits]
 

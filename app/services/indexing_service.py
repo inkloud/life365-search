@@ -1,4 +1,5 @@
 import asyncio
+import logging
 from collections.abc import Awaitable
 
 from app.domain.category import CategoryNode, CategoryPath, extract_level_3_paths
@@ -8,6 +9,8 @@ from app.infrastructure.life365_api.dto import CategoryDTO, ProductDTO
 from app.infrastructure.life365_api.mappers import map_category, map_product
 from app.infrastructure.opensearch.bulk_indexer import BulkIndexer
 from app.infrastructure.opensearch.index_manager import IndexManager
+
+logger = logging.getLogger(__name__)
 
 
 class IndexingService:
@@ -43,17 +46,24 @@ class IndexingService:
         return [product for sublist in results for product in sublist]
 
     async def reindex_all(self) -> str:
+        logger.info("Starting reindex process")
+
         version: int = await self._index_manager.get_next_version()
         index_name: str = await self._index_manager.create_index(version)
+        logger.info("Index created: %s", index_name)
 
         category_dtos: list[CategoryDTO] = await self._api_client.get_categories_tree()
         roots: list[CategoryNode] = [map_category(dto) for dto in category_dtos]
         category_paths: list[CategoryPath] = extract_level_3_paths(roots)
+        logger.info("Found %d level-3 categories", len(category_paths))
 
         products: list[Product] = await self._fetch_all_products(category_paths)
+        logger.info("Fetched %d products", len(products))
 
         await self._bulk_indexer.bulk_index(index_name, products)
 
+        logger.info("Switching alias to %s", index_name)
         await self._index_manager.switch_alias(index_name)
+        logger.info("Reindex completed successfully")
 
         return index_name
