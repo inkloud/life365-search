@@ -53,7 +53,7 @@ frozenlist==1.8.0
     # via
     #   aiohttp
     #   aiosignal
-grpcio==1.78.0
+grpcio==1.78.1
     # via opensearch-protobufs
 h11==0.16.0
     # via
@@ -114,7 +114,7 @@ pydantic==2.12.5
     #   pydantic-settings
 pydantic-core==2.41.5
     # via pydantic
-pydantic-settings==2.13.0
+pydantic-settings==2.13.1
     # via -r requirements.in
 pygments==2.19.2
     # via pytest
@@ -137,7 +137,7 @@ requests==2.32.5
     # via opensearch-py
 respx==0.22.0
     # via -r requirements.in
-ruff==0.15.1
+ruff==0.15.2
     # via -r requirements.in
 six==1.17.0
     # via python-dateutil
