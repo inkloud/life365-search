@@ -1,0 +1,22 @@
+{
+  "name": "life365-search",
+  "version": "2.5.0",
+  "description": "Life365 Search",
+  "scripts": {
+    "update": "ncu -u"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/inkloud/life365-portal-api.git"
+  },
+  "author": "Luca Bacchi <bacchilu@gmail.com>",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/inkloud/life365-portal-api/issues"
+  },
+  "homepage": "https://github.com/inkloud/life365-portal-api#readme",
+  "devDependencies": {
+    "@openai/codex": "^0.104.0",
+    "npm-check-updates": "^19.4.1"
+  }
+}
