@@ -3,6 +3,8 @@
 export USER_ID := $(shell id -u)
 export GROUP_ID := $(shell id -g)
 
+SHARED_NETWORK := life365-shared
+
 upgrade:
 	rm -f requirements.txt
 	uv venv
@@ -28,8 +30,10 @@ api-up:
 	uv run uvicorn app.main:app --reload
 
 docker-up:
+	docker network inspect $(SHARED_NETWORK) >/dev/null 2>&1 || docker network create $(SHARED_NETWORK)
 	docker compose up
 
 docker-down:
 	docker compose down -v
+	docker network rm $(SHARED_NETWORK) >/dev/null 2>&1 || true
 	docker image prune -a

@@ -23,6 +23,8 @@ services:
       - ./app:/app/app
     command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
     restart: unless-stopped
+    networks:
+      - life365-shared
 
   opensearch:
     image: opensearchproject/opensearch:3.5.0
@@ -41,6 +43,8 @@ services:
       retries: 10
       start_period: 30s
     restart: unless-stopped
+    networks:
+      - life365-shared
 
   rabbitmq:
     image: rabbitmq:4.2.4-management
@@ -54,6 +58,8 @@ services:
       timeout: 5s
       retries: 5
     restart: unless-stopped
+    networks:
+      - life365-shared
 
   worker:
     build:
@@ -68,6 +74,13 @@ services:
       - rabbitmq
       - opensearch
     restart: unless-stopped
+    networks:
+      - life365-shared
 
 volumes:
   opensearch-data:
+
+networks:
+  life365-shared:
+    external: true
+    name: life365-shared
