@@ -6,6 +6,34 @@ FastAPI service for searching Life365 products.
 
 Base URL: `http://localhost:8000`
 
+### `/search` supported query parameters
+
+| Param | Type | Default | Constraints |
+|---|---|---|---|
+| `q` | `string \| null` | `null` | Full-text query |
+| `category_level_1` | `int \| null` | `null` |  |
+| `category_level_2` | `int \| null` | `null` |  |
+| `category_level_3` | `int \| null` | `null` |  |
+| `brand` | `string \| null` | `null` |  |
+| `available` | `bool` | `true` |  |
+| `visible` | `bool` | `true` |  |
+| `outlet` | `bool` | `false` |  |
+| `page` | `int` | `1` | `>= 1` |
+| `page_size` | `int` | `20` | `>= 1`, `<= 100` |
+| `lang` | `enum` | `it` | `it`, `en`, `cn` |
+| `sort` | `enum` | `relevance` | `relevance`, `newest`, `brand` |
+
+### `sort` values behavior
+
+- `relevance`: sorts by OpenSearch `_score` (best text match first). Scoring uses `title` (higher boost), `keywords`, `description`, and category title in the selected language.
+- `newest`: sorts by `created_at` descending (most recent first).
+- `brand`: sorts by `brand` ascending (A to Z) using exact keyword values.
+
+Notes:
+
+- Filters (`category_level_*`, `brand`, `available`, `visible`, `outlet`) limit which products are returned, but do not change text relevance scoring.
+- If `q` is omitted, the query is `match_all`; with `sort=relevance`, ordering is not meaningful by relevance.
+
 ### Health check
 
 ```bash
