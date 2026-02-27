@@ -82,3 +82,7 @@ curl -sG http://localhost:8000/search \
 ```bash
 curl -sX POST http://localhost:8000/admin/reindex
 ```
+
+When running with `docker-compose`, the `scheduler` service also triggers
+`app.infrastructure.celery.tasks.reindex_all_task` automatically every 6 hours
+using the schedule defined in `worker/reindex.cron`.
