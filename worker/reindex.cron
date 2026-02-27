@@ -1,0 +1,1 @@
+0 */6 * * * cd /app && celery -A app.infrastructure.celery.app.celery_app call app.infrastructure.celery.tasks.reindex_all_task

@@ -77,6 +77,22 @@ services:
     networks:
       - life365-shared
 
+  scheduler:
+    build:
+      context: .
+      dockerfile: docker/worker.Dockerfile
+    container_name: life365-search-scheduler
+    environment:
+      ENVIRONMENT: local
+      RABBITMQ_URL: amqp://guest:guest@rabbitmq:5672//
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+    command: ["supercronic", "-json", "/app/worker/reindex.cron"]
+    restart: unless-stopped
+    networks:
+      - life365-shared
+
 volumes:
   opensearch-data:
 
