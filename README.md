@@ -46,6 +46,18 @@ curl -s http://localhost:8000/health
 curl -sG http://localhost:8000/search --data-urlencode "q=pellicola"
 ```
 
+### Exact search by ISIN
+
+```bash
+curl -sG http://localhost:8000/search --data-urlencode "q=DETPUPD03228"
+```
+
+### Exact search by barcode
+
+```bash
+curl -sG http://localhost:8000/search --data-urlencode "q=6938595306273"
+```
+
 ### Search with category and brand filters
 
 ```bash
