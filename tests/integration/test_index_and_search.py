@@ -15,7 +15,12 @@ from app.services.search_repository import SearchRepository
 os.environ["OPENSEARCH_INDEX_PREFIX"] = "products_test"
 
 
-def make_product(product_id: int, title: str, isin: str | None = None) -> Product:
+def make_product(
+    product_id: int,
+    title: str,
+    isin: str | None = None,
+    brand: str = "Devia",
+) -> Product:
     category: CategoryPath = CategoryPath(
         level_1_id=1,
         level_1_title=CategoryTitle(it="Accessori"),
@@ -28,7 +33,7 @@ def make_product(product_id: int, title: str, isin: str | None = None) -> Produc
     return Product(
         id=product_id,
         isin=isin or f"ISIN-{product_id}",
-        brand="Devia",
+        brand=brand,
         title=MultilingualText(it=title),
         description=MultilingualText(it="Descrizione prodotto"),
         keywords=MultilingualText(it="vetro temperato"),
@@ -53,9 +58,9 @@ async def test_index_and_search_flow():
 
         # Create products
         products: list[Product] = [
-            make_product(1, "Pellicola Vetro Temperato", "DETPUPD03228"),
+            make_product(1, "Pellicola Vetro Temperato", "DETPUPD03228", "Devia"),
             make_product(2, "Custodia Silicone"),
-            make_product(3, "Pellicola Privacy"),
+            make_product(3, "Pellicola Privacy", brand="Pro-Brother"),
         ]
 
         # Bulk index
@@ -79,6 +84,7 @@ async def test_index_and_search_flow():
         )
 
         assert any(hit.product_id == 1 for hit in isin_result.results)
+        assert isin_result.groups["brand"] == {"Devia": 1}
 
         await client.indices.delete(index=index_name)
     finally:

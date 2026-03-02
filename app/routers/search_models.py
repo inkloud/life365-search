@@ -36,3 +36,4 @@ class SearchResponse(BaseModel):
     page: int
     page_size: int
     results: list[SearchHitResponse]
+    groups: dict[str, dict[str, int]] = Field(default_factory=dict)

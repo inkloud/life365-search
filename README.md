@@ -6,6 +6,11 @@ FastAPI service for searching Life365 products.
 
 Base URL: `http://localhost:8000`
 
+`/search` response includes:
+- `total`, `page`, `page_size`, `results`
+- `groups.brand`: a map `{brand_name: matched_count}` computed over all
+  matched documents for the query+filters (not only the current page)
+
 ### `/search` supported query parameters
 
 | Param | Type | Default | Constraints |
@@ -43,6 +48,30 @@ curl -s http://localhost:8000/health
 
 ```bash
 curl -sG http://localhost:8000/search --data-urlencode "q=pellicola"
+```
+
+Example response excerpt:
+
+```json
+{
+  "total": 110,
+  "page": 1,
+  "page_size": 20,
+  "results": [
+    {
+      "product_id": 16453,
+      "title": "Toner compa 2310,2350,2370,2375,2510,2530,2550,2730,2750-3K",
+      "brand": "Pro-Brother",
+      "is_available": true
+    }
+  ],
+  "groups": {
+    "brand": {
+      "Pro-Brother": 6,
+      "Pro-Canon": 4
+    }
+  }
+}
 ```
 
 ### Exact search by ISIN

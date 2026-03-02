@@ -1,5 +1,5 @@
 import logging
-from typing import Any
+from typing import Any, cast
 
 from opensearchpy import AsyncOpenSearch
 from opensearchpy.exceptions import OpenSearchException
@@ -80,6 +80,17 @@ class OpenSearchRepository(SearchRepository):
 
         return ["_score"]
 
+    def _build_aggregations(self) -> dict[str, Any]:
+        return {
+            "brand": {
+                "terms": {
+                    "field": "brand",
+                    "size": 1000,
+                    "order": {"_count": "desc"},
+                }
+            }
+        }
+
     async def search(self, query: SearchQuery) -> SearchResult:
         from_: int = (query.page - 1) * query.page_size
 
@@ -93,6 +104,7 @@ class OpenSearchRepository(SearchRepository):
             "from": from_,
             "size": query.page_size,
             "sort": self._build_sort(query),
+            "aggs": self._build_aggregations(),
         }
 
         logger.debug(
@@ -109,14 +121,51 @@ class OpenSearchRepository(SearchRepository):
 
         total = response["hits"]["total"]["value"]
         hits = response["hits"]["hits"]
+        groups = self._map_groups(response)
 
         logger.debug("Search returned %d results", total)
 
         results: list[SearchHit] = [self._map_hit(hit, query.language) for hit in hits]
 
         return SearchResult(
-            total=total, page=query.page, page_size=query.page_size, results=results
+            total=total,
+            page=query.page,
+            page_size=query.page_size,
+            results=results,
+            groups=groups,
         )
+
+    def _map_groups(self, response: dict[str, Any]) -> dict[str, dict[str, int]]:
+        aggregations = response.get("aggregations")
+
+        if not isinstance(aggregations, dict):
+            return {"brand": {}}
+
+        aggregations_dict = cast(dict[str, object], aggregations)
+        brand_agg = aggregations_dict.get("brand")
+        if not isinstance(brand_agg, dict):
+            return {"brand": {}}
+
+        brand_agg_dict = cast(dict[str, object], brand_agg)
+        buckets = brand_agg_dict.get("buckets")
+        if not isinstance(buckets, list):
+            return {"brand": {}}
+        buckets_list = cast(list[object], buckets)
+
+        brand_groups: dict[str, int] = {}
+
+        for bucket in buckets_list:
+            if not isinstance(bucket, dict):
+                continue
+
+            bucket_dict = cast(dict[str, object], bucket)
+            key = bucket_dict.get("key")
+            count = bucket_dict.get("doc_count")
+
+            if isinstance(key, str) and isinstance(count, int):
+                brand_groups[key] = count
+
+        return {"brand": brand_groups}
 
     def _map_hit(self, hit: dict[str, Any], language: str) -> SearchHit:
         source = hit["_source"]

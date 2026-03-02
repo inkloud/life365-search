@@ -1,4 +1,4 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 
 
 @dataclass(frozen=True)
@@ -36,3 +36,4 @@ class SearchResult:
     page: int
     page_size: int
     results: list[SearchHit]
+    groups: dict[str, dict[str, int]] = field(default_factory=dict[str, dict[str, int]])

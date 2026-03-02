@@ -61,4 +61,5 @@ async def search_endpoint(params: SearchRequest = Depends()):
                 )
                 for r in result.results
             ],
+            groups=result.groups,
         )
