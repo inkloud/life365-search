@@ -8,6 +8,7 @@ def test_map_product_basic():
     dto: ProductDTO = ProductDTO(
         id=1,
         isin="DETPUPD03228",
+        barcodes=["8001234567890"],
         titles={"it": "Prodotto"},
         descriptions={},
         keywords={},
@@ -31,6 +32,7 @@ def test_map_product_basic():
 
     assert product.id == 1
     assert product.isin == "DETPUPD03228"
+    assert product.barcodes == ["8001234567890"]
     assert product.brand == "Devia"
     assert product.stock.is_available is True
 

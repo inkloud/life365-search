@@ -10,6 +10,7 @@ def test_build_product_document_normalizes_and_filters_none_fields():
     product: Product = Product(
         id=42,
         isin="DETPUPD03228",
+        barcodes=["8001234567890"],
         brand=None,
         title=MultilingualText(it="   ", en="<b> Hello&nbsp;World </b>", cn=None),
         description=MultilingualText(it=None, en=None, cn="  <p>Descrizione</p>  "),
@@ -31,6 +32,7 @@ def test_build_product_document_normalizes_and_filters_none_fields():
 
     assert doc["product_id"] == 42
     assert doc["isin"] == "DETPUPD03228"
+    assert doc["barcodes"] == ["8001234567890"]
     assert doc["title_en"] == "Hello World"
     assert doc["title_it"] == "Hello World"
     assert doc["title_cn"] == "Hello World"

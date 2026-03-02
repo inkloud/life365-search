@@ -13,6 +13,9 @@ def test_build_text_query_includes_isin_term():
     assert query["bool"]["minimum_should_match"] == 1
     should_clauses = query["bool"]["should"]
     assert {"term": {"isin": {"value": "DETPUPD03228", "boost": 10}}} in should_clauses
+    assert {
+        "term": {"barcodes": {"value": "DETPUPD03228", "boost": 10}}
+    } in should_clauses
 
 
 def test_build_text_query_without_text_uses_match_all():

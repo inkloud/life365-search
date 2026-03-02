@@ -12,6 +12,7 @@ def build_product_document(product: Product) -> dict[str, Any]:
     doc: dict[str, Any] = {
         "product_id": product.id,
         "isin": product.isin,
+        "barcodes": product.barcodes,
         "title_it": title.best_for("it"),
         "title_en": title.best_for("en"),
         "title_cn": title.best_for("cn"),

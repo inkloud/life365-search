@@ -43,6 +43,7 @@ async def test_reindex_all_orders_create_bulk_and_alias_calls():
         ProductDTO(
             id=100,
             isin="DETPUPD03228",
+            barcodes=["8001234567890"],
             titles={"it": "Prodotto"},
             descriptions={},
             keywords={},

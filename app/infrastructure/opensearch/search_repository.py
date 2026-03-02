@@ -45,6 +45,7 @@ class OpenSearchRepository(SearchRepository):
                         }
                     },
                     {"term": {"isin": {"value": query.text, "boost": 10}}},
+                    {"term": {"barcodes": {"value": query.text, "boost": 10}}},
                 ],
                 "minimum_should_match": 1,
             }

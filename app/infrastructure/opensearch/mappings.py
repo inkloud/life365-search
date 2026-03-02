@@ -8,6 +8,7 @@ def build_product_index_mapping() -> dict[str, Any]:
             "properties": {
                 "product_id": {"type": "integer"},
                 "isin": {"type": "keyword"},
+                "barcodes": {"type": "keyword"},
                 "title_it": {"type": "text", "analyzer": "italian"},
                 "title_en": {"type": "text", "analyzer": "english"},
                 "title_cn": {"type": "text", "analyzer": "standard"},

@@ -13,6 +13,7 @@ def _make_product(product_id: int) -> Product:
     return Product(
         id=product_id,
         isin=f"ISIN-{product_id}",
+        barcodes=[f"BAR-{product_id}"],
         brand="Brand",
         title=MultilingualText(it="Titolo"),
         description=MultilingualText(it="Descrizione"),

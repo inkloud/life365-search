@@ -41,6 +41,7 @@ class StockInfo:
 class Product:
     id: int
     isin: str | None
+    barcodes: list[str]
     brand: str | None
 
     title: MultilingualText

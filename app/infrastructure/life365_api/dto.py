@@ -6,7 +6,7 @@ from pydantic import BaseModel, Field, field_validator
 class CategoryDTO(BaseModel):
     id: int
     title: dict[str, str | None]
-    zchildren: list["CategoryDTO"] = Field(default_factory=list)
+    zchildren: list["CategoryDTO"] = Field(default_factory=list["CategoryDTO"])
 
     @classmethod
     def from_api(cls, data: dict[str, Any]) -> "CategoryDTO":
@@ -29,11 +29,12 @@ class BrandDTO(BaseModel):
 class ProductDTO(BaseModel):
     id: int
     isin: str | None = None
+    barcodes: list[str] = Field(default_factory=list[str])
     titles: dict[str, str | None] = Field(default_factory=dict)
     descriptions: dict[str, str | None] = Field(default_factory=dict)
     keywords: dict[str, str | None] = Field(default_factory=dict)
     brand: BrandDTO | None = None
-    product_stocks: list[StockRowDTO] = Field(default_factory=list)
+    product_stocks: list[StockRowDTO] = Field(default_factory=list[StockRowDTO])
     level_1: int
     level_2: int
     level_3: int
