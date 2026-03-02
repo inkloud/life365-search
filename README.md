@@ -11,6 +11,7 @@ Base URL: `http://localhost:8000`
 - `groups.brand`: a map `{brand_name: matched_count}` computed over all
   matched documents for the query+filters (not only the current page)
 - `groups.category_level_1|2|3`: maps `{category_id: matched_count}`
+- `groups.type1|type2`: maps `{type_value: matched_count}`
 
 ### `/search` supported query parameters
 
@@ -80,6 +81,16 @@ Example response excerpt:
     },
     "category_level_3": {
       "1134": 12
+    },
+    "type1": {
+      "200W": 1,
+      "250W": 2,
+      "Blue-White": 1
+    },
+    "type2": {
+      "200W": 1,
+      "250W": 2,
+      "Blue-White": 1
     }
   }
 }

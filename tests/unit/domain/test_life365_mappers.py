@@ -13,6 +13,8 @@ def test_map_product_basic():
         descriptions={},
         keywords={},
         brand=BrandDTO(brand_name="Devia"),
+        type1="200W",
+        type2="Blue-White",
         product_stocks=[StockRowDTO(stock=5)],
         level_1=1,
         level_2=2,
@@ -34,6 +36,8 @@ def test_map_product_basic():
     assert product.isin == "DETPUPD03228"
     assert product.barcodes == ["8001234567890"]
     assert product.brand == "Devia"
+    assert product.type1 == "200W"
+    assert product.type2 == "Blue-White"
     assert product.stock.is_available is True
 
 

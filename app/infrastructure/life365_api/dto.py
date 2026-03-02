@@ -33,6 +33,8 @@ class ProductDTO(BaseModel):
     descriptions: dict[str, str | None] = Field(default_factory=dict)
     keywords: dict[str, str | None] = Field(default_factory=dict)
     brand: BrandDTO | None = None
+    type1: str | None = None
+    type2: str | None = None
     product_stocks: list[StockRowDTO] = Field(default_factory=list[StockRowDTO])
     level_1: int
     level_2: int
@@ -44,3 +46,13 @@ class ProductDTO(BaseModel):
     @classmethod
     def _none_to_empty_dict(cls, value: Any) -> Any:
         return {} if value is None else value
+
+    @field_validator("type1", "type2", mode="before")
+    @classmethod
+    def _empty_string_to_none(cls, value: Any) -> Any:
+        if value is None:
+            return None
+        if isinstance(value, str):
+            normalized: str = value.strip()
+            return normalized or None
+        return value

@@ -60,6 +60,8 @@ async def test_search_returns_brand_groups_from_aggregations():
             },
             "category_level_2": {"buckets": [{"key": 188, "doc_count": 6}]},
             "category_level_3": {"buckets": [{"key": 1134, "doc_count": 4}]},
+            "type1": {"buckets": [{"key": "200W", "doc_count": 3}]},
+            "type2": {"buckets": [{"key": "Blue-White", "doc_count": 2}]},
         },
     }
 
@@ -73,6 +75,8 @@ async def test_search_returns_brand_groups_from_aggregations():
         "category_level_1": {"1": 10, "14": 2},
         "category_level_2": {"188": 6},
         "category_level_3": {"1134": 4},
+        "type1": {"200W": 3},
+        "type2": {"Blue-White": 2},
     }
 
     search_body = client.search.await_args.kwargs["body"]
@@ -90,3 +94,5 @@ async def test_search_returns_brand_groups_from_aggregations():
         search_body["aggs"]["category_level_3"]["terms"]["field"]
         == "category_level_3_id"
     )
+    assert search_body["aggs"]["type1"]["terms"]["field"] == "type1"
+    assert search_body["aggs"]["type2"]["terms"]["field"] == "type2"

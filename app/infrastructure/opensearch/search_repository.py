@@ -110,6 +110,20 @@ class OpenSearchRepository(SearchRepository):
                     "order": {"_count": "desc"},
                 }
             },
+            "type1": {
+                "terms": {
+                    "field": "type1",
+                    "size": 1000,
+                    "order": {"_count": "desc"},
+                }
+            },
+            "type2": {
+                "terms": {
+                    "field": "type2",
+                    "size": 1000,
+                    "order": {"_count": "desc"},
+                }
+            },
         }
 
     async def search(self, query: SearchQuery) -> SearchResult:
@@ -193,6 +207,8 @@ class OpenSearchRepository(SearchRepository):
                 "category_level_1": {},
                 "category_level_2": {},
                 "category_level_3": {},
+                "type1": {},
+                "type2": {},
             }
 
         aggregations_dict = cast(dict[str, object], aggregations)
@@ -207,6 +223,8 @@ class OpenSearchRepository(SearchRepository):
             "category_level_3": self._extract_terms_group(
                 aggregations_dict, "category_level_3"
             ),
+            "type1": self._extract_terms_group(aggregations_dict, "type1"),
+            "type2": self._extract_terms_group(aggregations_dict, "type2"),
         }
 
     def _map_hit(self, hit: dict[str, Any], language: str) -> SearchHit:

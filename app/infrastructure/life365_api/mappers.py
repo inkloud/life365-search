@@ -28,6 +28,8 @@ def map_product(dto: ProductDTO, category_path: CategoryPath) -> Product:
         keywords=MultilingualText.from_dict(dto.keywords),
         category=category_path,
         stock=aggregate_stock([e.model_dump() for e in dto.product_stocks]),
+        type1=dto.type1,
+        type2=dto.type2,
         created_at=parse_datetime(dto.created_at),
         updated_at=parse_datetime(dto.updated_at),
     )

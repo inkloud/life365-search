@@ -23,6 +23,8 @@ def build_product_document(product: Product) -> dict[str, Any]:
         "keywords_en": keywords.best_for("en"),
         "keywords_cn": keywords.best_for("cn"),
         "brand": product.brand,
+        "type1": product.type1,
+        "type2": product.type2,
         "category_level_1_id": product.category.level_1_id,
         "category_level_2_id": product.category.level_2_id,
         "category_level_3_id": product.category.level_3_id,

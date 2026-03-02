@@ -19,6 +19,8 @@ def build_product_index_mapping() -> dict[str, Any]:
                 "keywords_en": {"type": "text", "analyzer": "english"},
                 "keywords_cn": {"type": "text", "analyzer": "standard"},
                 "brand": {"type": "keyword"},
+                "type1": {"type": "keyword"},
+                "type2": {"type": "keyword"},
                 "category_level_1_id": {"type": "integer"},
                 "category_level_2_id": {"type": "integer"},
                 "category_level_3_id": {"type": "integer"},

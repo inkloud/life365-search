@@ -20,6 +20,8 @@ def make_product(
     title: str,
     isin: str | None = None,
     brand: str = "Devia",
+    type1: str | None = None,
+    type2: str | None = None,
 ) -> Product:
     category: CategoryPath = CategoryPath(
         level_1_id=1,
@@ -39,6 +41,8 @@ def make_product(
         keywords=MultilingualText(it="vetro temperato"),
         category=category,
         stock=StockInfo(is_available=True, is_visible=True),
+        type1=type1,
+        type2=type2,
         created_at=datetime.now(timezone.utc),
         updated_at=datetime.now(timezone.utc),
     )
@@ -58,7 +62,14 @@ async def test_index_and_search_flow():
 
         # Create products
         products: list[Product] = [
-            make_product(1, "Pellicola Vetro Temperato", "DETPUPD03228", "Devia"),
+            make_product(
+                1,
+                "Pellicola Vetro Temperato",
+                "DETPUPD03228",
+                "Devia",
+                type1="200W",
+                type2="Blue-White",
+            ),
             make_product(2, "Custodia Silicone"),
             make_product(3, "Pellicola Privacy", brand="Pro-Brother"),
         ]
@@ -88,6 +99,8 @@ async def test_index_and_search_flow():
         assert isin_result.groups["category_level_1"] == {"1": 1}
         assert isin_result.groups["category_level_2"] == {"2": 1}
         assert isin_result.groups["category_level_3"] == {"3": 1}
+        assert isin_result.groups["type1"] == {"200W": 1}
+        assert isin_result.groups["type2"] == {"Blue-White": 1}
 
         await client.indices.delete(index=index_name)
     finally:
