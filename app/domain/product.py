@@ -34,7 +34,6 @@ class MultilingualText:
 class StockInfo:
     is_available: bool
     is_visible: bool
-    is_outlet: bool
 
 
 @dataclass(frozen=True)
@@ -61,8 +60,4 @@ def aggregate_stock(rows: list[dict[str, bool | int]]) -> StockInfo:
     is_available = any(
         row.get("stock", 0) > 0 and not row.get("invisible", False) for row in rows
     )
-    is_outlet = any(row.get("outlet", False) for row in rows)
-
-    return StockInfo(
-        is_available=is_available, is_visible=is_visible, is_outlet=is_outlet
-    )
+    return StockInfo(is_available=is_available, is_visible=is_visible)

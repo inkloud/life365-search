@@ -68,7 +68,6 @@ class OpenSearchRepository(SearchRepository):
 
         filters.append({"term": {"is_available": query.is_available}})
         filters.append({"term": {"is_visible": query.is_visible}})
-        filters.append({"term": {"is_outlet": query.is_outlet}})
 
         return filters
 
@@ -129,5 +128,4 @@ class OpenSearchRepository(SearchRepository):
             title=source.get(title_field) or "",
             brand=source.get("brand"),
             is_available=source.get("is_available", False),
-            is_outlet=source.get("is_outlet", False),
         )

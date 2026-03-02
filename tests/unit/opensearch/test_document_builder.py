@@ -23,7 +23,7 @@ def test_build_product_document_normalizes_and_filters_none_fields():
             level_3_id=3,
             level_3_title=CategoryTitle(it="L3 IT", en="L3 EN", cn="L3 CN"),
         ),
-        stock=StockInfo(is_available=True, is_visible=True, is_outlet=False),
+        stock=StockInfo(is_available=True, is_visible=True),
         created_at=None,
         updated_at=datetime(2025, 1, 2, 3, 4, 5, tzinfo=timezone.utc),
     )
@@ -44,7 +44,6 @@ def test_build_product_document_normalizes_and_filters_none_fields():
     assert doc["updated_at"] == "2025-01-02T03:04:05+00:00"
     assert doc["is_available"] is True
     assert doc["is_visible"] is True
-    assert doc["is_outlet"] is False
 
     assert "brand" not in doc
     assert "created_at" not in doc

@@ -47,7 +47,7 @@ async def test_reindex_all_orders_create_bulk_and_alias_calls():
             titles={"it": "Prodotto"},
             descriptions={},
             keywords={},
-            product_stocks=[StockRowDTO(stock=5, invisible=False, outlet=False)],
+            product_stocks=[StockRowDTO(stock=5, invisible=False)],
             level_1=1,
             level_2=2,
             level_3=3,

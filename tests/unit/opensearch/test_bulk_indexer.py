@@ -26,7 +26,7 @@ def _make_product(product_id: int) -> Product:
             level_3_id=3,
             level_3_title=CategoryTitle(it="L3"),
         ),
-        stock=StockInfo(is_available=True, is_visible=True, is_outlet=False),
+        stock=StockInfo(is_available=True, is_visible=True),
         created_at=datetime(2025, 1, 1, tzinfo=timezone.utc),
         updated_at=datetime(2025, 1, 2, tzinfo=timezone.utc),
     )

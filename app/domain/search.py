@@ -13,7 +13,6 @@ class SearchQuery:
 
     is_available: bool = True
     is_visible: bool = True
-    is_outlet: bool = False
 
     page: int = 1
     page_size: int = 20
@@ -29,7 +28,6 @@ class SearchHit:
     title: str
     brand: str | None
     is_available: bool
-    is_outlet: bool
 
 
 @dataclass(frozen=True)

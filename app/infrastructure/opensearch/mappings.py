@@ -33,7 +33,6 @@ def build_product_index_mapping() -> dict[str, Any]:
                 "category_level_3_title_cn": {"type": "text", "analyzer": "standard"},
                 "is_available": {"type": "boolean"},
                 "is_visible": {"type": "boolean"},
-                "is_outlet": {"type": "boolean"},
                 "created_at": {"type": "date"},
                 "updated_at": {"type": "date"},
             }

@@ -19,7 +19,6 @@ CategoryDTO.model_rebuild()
 class StockRowDTO(BaseModel):
     stock: int | None = 0
     invisible: bool = False
-    outlet: bool = False
 
 
 class BrandDTO(BaseModel):

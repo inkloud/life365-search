@@ -40,7 +40,6 @@ async def search_endpoint(params: SearchRequest = Depends()):
             brand=params.brand,
             is_available=params.available,
             is_visible=params.visible,
-            is_outlet=params.outlet,
             page=params.page,
             page_size=params.page_size,
             language=params.lang,
@@ -59,7 +58,6 @@ async def search_endpoint(params: SearchRequest = Depends()):
                     title=r.title,
                     brand=r.brand,
                     is_available=r.is_available,
-                    is_outlet=r.is_outlet,
                 )
                 for r in result.results
             ],

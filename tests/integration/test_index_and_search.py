@@ -33,7 +33,7 @@ def make_product(product_id: int, title: str, isin: str | None = None) -> Produc
         description=MultilingualText(it="Descrizione prodotto"),
         keywords=MultilingualText(it="vetro temperato"),
         category=category,
-        stock=StockInfo(is_available=True, is_visible=True, is_outlet=False),
+        stock=StockInfo(is_available=True, is_visible=True),
         created_at=datetime.now(timezone.utc),
         updated_at=datetime.now(timezone.utc),
     )

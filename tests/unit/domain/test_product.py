@@ -11,12 +11,11 @@ def test_multilingual_fallback():
 
 def test_stock_aggregation():
     rows: list[dict[str, bool | int]] = [
-        {"stock": 0, "invisible": False, "outlet": False},
-        {"stock": 5, "invisible": False, "outlet": False},
+        {"stock": 0, "invisible": False},
+        {"stock": 5, "invisible": False},
     ]
 
     stock: StockInfo = aggregate_stock(rows)
 
     assert stock.is_available is True
     assert stock.is_visible is True
-    assert stock.is_outlet is False

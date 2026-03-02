@@ -17,7 +17,6 @@ Base URL: `http://localhost:8000`
 | `brand` | `string \| null` | `null` |  |
 | `available` | `bool` | `true` |  |
 | `visible` | `bool` | `true` |  |
-| `outlet` | `bool` | `false` |  |
 | `page` | `int` | `1` | `>= 1` |
 | `page_size` | `int` | `20` | `>= 1`, `<= 100` |
 | `lang` | `enum` | `it` | `it`, `en`, `cn` |
@@ -31,7 +30,7 @@ Base URL: `http://localhost:8000`
 
 Notes:
 
-- Filters (`category_level_*`, `brand`, `available`, `visible`, `outlet`) limit which products are returned, but do not change text relevance scoring.
+- Filters (`category_level_*`, `brand`, `available`, `visible`) limit which products are returned, but do not change text relevance scoring.
 - If `q` is omitted, the query is `match_all`; with `sort=relevance`, ordering is not meaningful by relevance.
 
 ### Health check
@@ -77,15 +76,6 @@ curl -sG http://localhost:8000/search \
   --data-urlencode "page=2" \
   --data-urlencode "page_size=10" \
   --data-urlencode "sort=newest"
-```
-
-### Search outlet products only
-
-```bash
-curl -sG http://localhost:8000/search \
-  --data-urlencode "outlet=true" \
-  --data-urlencode "available=true" \
-  --data-urlencode "visible=true"
 ```
 
 ### Trigger full reindex

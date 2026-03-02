@@ -14,7 +14,6 @@ class SearchRequest(BaseModel):
 
     available: bool = True
     visible: bool = True
-    outlet: bool = False
 
     page: int = Field(1, ge=1)
     page_size: int = Field(20, ge=1, le=100)
@@ -30,7 +29,6 @@ class SearchHitResponse(BaseModel):
     title: str
     brand: str | None
     is_available: bool
-    is_outlet: bool
 
 
 class SearchResponse(BaseModel):

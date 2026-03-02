@@ -37,7 +37,6 @@ def build_product_document(product: Product) -> dict[str, Any]:
         "category_level_3_title_cn": product.category.level_3_title.cn,
         "is_available": product.stock.is_available,
         "is_visible": product.stock.is_visible,
-        "is_outlet": product.stock.is_outlet,
         "created_at": product.created_at.isoformat() if product.created_at else None,
         "updated_at": product.updated_at.isoformat() if product.updated_at else None,
     }
