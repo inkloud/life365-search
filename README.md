@@ -10,6 +10,7 @@ Base URL: `http://localhost:8000`
 - `total`, `page`, `page_size`, `results`
 - `groups.brand`: a map `{brand_name: matched_count}` computed over all
   matched documents for the query+filters (not only the current page)
+- `groups.category_level_1|2|3`: maps `{category_id: matched_count}`
 
 ### `/search` supported query parameters
 
@@ -69,6 +70,16 @@ Example response excerpt:
     "brand": {
       "Pro-Brother": 6,
       "Pro-Canon": 4
+    },
+    "category_level_1": {
+      "1": 39,
+      "14": 2
+    },
+    "category_level_2": {
+      "188": 20
+    },
+    "category_level_3": {
+      "1134": 12
     }
   }
 }

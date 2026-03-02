@@ -51,7 +51,15 @@ async def test_search_returns_brand_groups_from_aggregations():
                     {"key": "Pro-Brother", "doc_count": 6},
                     {"key": "Pro-Canon", "doc_count": 4},
                 ]
-            }
+            },
+            "category_level_1": {
+                "buckets": [
+                    {"key": 1, "doc_count": 10},
+                    {"key": 14, "doc_count": 2},
+                ]
+            },
+            "category_level_2": {"buckets": [{"key": 188, "doc_count": 6}]},
+            "category_level_3": {"buckets": [{"key": 1134, "doc_count": 4}]},
         },
     }
 
@@ -60,8 +68,25 @@ async def test_search_returns_brand_groups_from_aggregations():
 
     result = await repo.search(SearchQuery(text="Toner", language="it"))
 
-    assert result.groups == {"brand": {"Pro-Brother": 6, "Pro-Canon": 4}}
+    assert result.groups == {
+        "brand": {"Pro-Brother": 6, "Pro-Canon": 4},
+        "category_level_1": {"1": 10, "14": 2},
+        "category_level_2": {"188": 6},
+        "category_level_3": {"1134": 4},
+    }
 
     search_body = client.search.await_args.kwargs["body"]
     assert "aggs" in search_body
     assert search_body["aggs"]["brand"]["terms"]["field"] == "brand"
+    assert (
+        search_body["aggs"]["category_level_1"]["terms"]["field"]
+        == "category_level_1_id"
+    )
+    assert (
+        search_body["aggs"]["category_level_2"]["terms"]["field"]
+        == "category_level_2_id"
+    )
+    assert (
+        search_body["aggs"]["category_level_3"]["terms"]["field"]
+        == "category_level_3_id"
+    )

@@ -85,6 +85,9 @@ async def test_index_and_search_flow():
 
         assert any(hit.product_id == 1 for hit in isin_result.results)
         assert isin_result.groups["brand"] == {"Devia": 1}
+        assert isin_result.groups["category_level_1"] == {"1": 1}
+        assert isin_result.groups["category_level_2"] == {"2": 1}
+        assert isin_result.groups["category_level_3"] == {"3": 1}
 
         await client.indices.delete(index=index_name)
     finally:

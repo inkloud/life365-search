@@ -88,7 +88,28 @@ class OpenSearchRepository(SearchRepository):
                     "size": 1000,
                     "order": {"_count": "desc"},
                 }
-            }
+            },
+            "category_level_1": {
+                "terms": {
+                    "field": "category_level_1_id",
+                    "size": 1000,
+                    "order": {"_count": "desc"},
+                }
+            },
+            "category_level_2": {
+                "terms": {
+                    "field": "category_level_2_id",
+                    "size": 1000,
+                    "order": {"_count": "desc"},
+                }
+            },
+            "category_level_3": {
+                "terms": {
+                    "field": "category_level_3_id",
+                    "size": 1000,
+                    "order": {"_count": "desc"},
+                }
+            },
         }
 
     async def search(self, query: SearchQuery) -> SearchResult:
@@ -135,24 +156,20 @@ class OpenSearchRepository(SearchRepository):
             groups=groups,
         )
 
-    def _map_groups(self, response: dict[str, Any]) -> dict[str, dict[str, int]]:
-        aggregations = response.get("aggregations")
+    def _extract_terms_group(
+        self, aggregations_dict: dict[str, object], group_key: str
+    ) -> dict[str, int]:
+        group_agg = aggregations_dict.get(group_key)
+        if not isinstance(group_agg, dict):
+            return {}
 
-        if not isinstance(aggregations, dict):
-            return {"brand": {}}
-
-        aggregations_dict = cast(dict[str, object], aggregations)
-        brand_agg = aggregations_dict.get("brand")
-        if not isinstance(brand_agg, dict):
-            return {"brand": {}}
-
-        brand_agg_dict = cast(dict[str, object], brand_agg)
-        buckets = brand_agg_dict.get("buckets")
+        group_agg_dict = cast(dict[str, object], group_agg)
+        buckets = group_agg_dict.get("buckets")
         if not isinstance(buckets, list):
-            return {"brand": {}}
+            return {}
         buckets_list = cast(list[object], buckets)
 
-        brand_groups: dict[str, int] = {}
+        grouped_values: dict[str, int] = {}
 
         for bucket in buckets_list:
             if not isinstance(bucket, dict):
@@ -162,10 +179,35 @@ class OpenSearchRepository(SearchRepository):
             key = bucket_dict.get("key")
             count = bucket_dict.get("doc_count")
 
-            if isinstance(key, str) and isinstance(count, int):
-                brand_groups[key] = count
+            if isinstance(count, int) and isinstance(key, (int, str)):
+                grouped_values[str(key)] = count
 
-        return {"brand": brand_groups}
+        return grouped_values
+
+    def _map_groups(self, response: dict[str, Any]) -> dict[str, dict[str, int]]:
+        aggregations = response.get("aggregations")
+
+        if not isinstance(aggregations, dict):
+            return {
+                "brand": {},
+                "category_level_1": {},
+                "category_level_2": {},
+                "category_level_3": {},
+            }
+
+        aggregations_dict = cast(dict[str, object], aggregations)
+        return {
+            "brand": self._extract_terms_group(aggregations_dict, "brand"),
+            "category_level_1": self._extract_terms_group(
+                aggregations_dict, "category_level_1"
+            ),
+            "category_level_2": self._extract_terms_group(
+                aggregations_dict, "category_level_2"
+            ),
+            "category_level_3": self._extract_terms_group(
+                aggregations_dict, "category_level_3"
+            ),
+        }
 
     def _map_hit(self, hit: dict[str, Any], language: str) -> SearchHit:
         source = hit["_source"]
