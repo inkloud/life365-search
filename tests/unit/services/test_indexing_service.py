@@ -42,6 +42,7 @@ async def test_reindex_all_orders_create_bulk_and_alias_calls():
     products_for_level3: list[ProductDTO] = [
         ProductDTO(
             id=100,
+            isin="DETPUPD03228",
             titles={"it": "Prodotto"},
             descriptions={},
             keywords={},

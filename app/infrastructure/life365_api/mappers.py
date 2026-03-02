@@ -20,6 +20,7 @@ def map_category(dto: CategoryDTO) -> CategoryNode:
 def map_product(dto: ProductDTO, category_path: CategoryPath) -> Product:
     return Product(
         id=dto.id,
+        isin=dto.isin,
         brand=dto.brand.brand_name if dto.brand else None,
         title=MultilingualText.from_dict(dto.titles),
         description=MultilingualText.from_dict(dto.descriptions),

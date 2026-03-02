@@ -40,6 +40,7 @@ class StockInfo:
 @dataclass(frozen=True)
 class Product:
     id: int
+    isin: str | None
     brand: str | None
 
     title: MultilingualText

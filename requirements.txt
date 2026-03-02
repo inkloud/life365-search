@@ -47,7 +47,7 @@ coverage==7.13.4
     # via pytest-cov
 events==0.5
     # via opensearch-py
-fastapi==0.133.1
+fastapi==0.135.1
     # via -r requirements.in
 frozenlist==1.8.0
     # via
@@ -131,7 +131,7 @@ python-dateutil==2.9.0.post0
     # via
     #   celery
     #   opensearch-py
-python-dotenv==1.2.1
+python-dotenv==1.2.2
     # via pydantic-settings
 requests==2.32.5
     # via opensearch-py
@@ -173,5 +173,5 @@ vine==5.1.0
     #   kombu
 wcwidth==0.6.0
     # via prompt-toolkit
-yarl==1.22.0
+yarl==1.23.0
     # via aiohttp

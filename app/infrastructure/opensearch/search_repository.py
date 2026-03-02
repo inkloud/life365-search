@@ -30,15 +30,23 @@ class OpenSearchRepository(SearchRepository):
         category_field: str = f"category_level_3_title_{lang}"
 
         return {
-            "multi_match": {
-                "query": query.text,
-                "fields": [
-                    f"{title_field}^3",
-                    f"{keywords_field}^2",
-                    description_field,
-                    category_field,
+            "bool": {
+                "should": [
+                    {
+                        "multi_match": {
+                            "query": query.text,
+                            "fields": [
+                                f"{title_field}^3",
+                                f"{keywords_field}^2",
+                                description_field,
+                                category_field,
+                            ],
+                            "type": "best_fields",
+                        }
+                    },
+                    {"term": {"isin": {"value": query.text, "boost": 10}}},
                 ],
-                "type": "best_fields",
+                "minimum_should_match": 1,
             }
         }
 

@@ -7,6 +7,7 @@ from app.infrastructure.life365_api.mappers import map_product
 def test_map_product_basic():
     dto: ProductDTO = ProductDTO(
         id=1,
+        isin="DETPUPD03228",
         titles={"it": "Prodotto"},
         descriptions={},
         keywords={},
@@ -29,6 +30,7 @@ def test_map_product_basic():
     product: Product = map_product(dto, category)
 
     assert product.id == 1
+    assert product.isin == "DETPUPD03228"
     assert product.brand == "Devia"
     assert product.stock.is_available is True
 

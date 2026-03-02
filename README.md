@@ -43,8 +43,7 @@ curl -s http://localhost:8000/health
 ### Basic full-text search
 
 ```bash
-curl -sG http://localhost:8000/search \
-  --data-urlencode "q=pellicola"
+curl -sG http://localhost:8000/search --data-urlencode "q=pellicola"
 ```
 
 ### Search with category and brand filters

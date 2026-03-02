@@ -12,6 +12,7 @@ from app.infrastructure.opensearch.bulk_indexer import BulkIndexer
 def _make_product(product_id: int) -> Product:
     return Product(
         id=product_id,
+        isin=f"ISIN-{product_id}",
         brand="Brand",
         title=MultilingualText(it="Titolo"),
         description=MultilingualText(it="Descrizione"),

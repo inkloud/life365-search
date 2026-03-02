@@ -9,6 +9,7 @@ from app.infrastructure.opensearch.document_builder import build_product_documen
 def test_build_product_document_normalizes_and_filters_none_fields():
     product: Product = Product(
         id=42,
+        isin="DETPUPD03228",
         brand=None,
         title=MultilingualText(it="   ", en="<b> Hello&nbsp;World </b>", cn=None),
         description=MultilingualText(it=None, en=None, cn="  <p>Descrizione</p>  "),
@@ -29,6 +30,7 @@ def test_build_product_document_normalizes_and_filters_none_fields():
     doc: dict[str, Any] = build_product_document(product)
 
     assert doc["product_id"] == 42
+    assert doc["isin"] == "DETPUPD03228"
     assert doc["title_en"] == "Hello World"
     assert doc["title_it"] == "Hello World"
     assert doc["title_cn"] == "Hello World"

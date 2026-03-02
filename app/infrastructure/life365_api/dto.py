@@ -28,6 +28,7 @@ class BrandDTO(BaseModel):
 
 class ProductDTO(BaseModel):
     id: int
+    isin: str | None = None
     titles: dict[str, str | None] = Field(default_factory=dict)
     descriptions: dict[str, str | None] = Field(default_factory=dict)
     keywords: dict[str, str | None] = Field(default_factory=dict)
