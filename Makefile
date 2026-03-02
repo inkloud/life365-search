@@ -42,4 +42,4 @@ docker-down:
 
 reindex:
 	@curl -fsS $(HEALTH_URL) >/dev/null
-	@curl -fsS -X POST $(REINDEX_URL)
+	@curl -fsS -X POST $(REINDEX_URL) | jq
