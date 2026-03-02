@@ -1,9 +1,11 @@
-.PHONY: venv test api-up clean docker-up docker-down upgrade
+.PHONY: venv test api-up clean docker-up docker-down upgrade reindex
 
 export USER_ID := $(shell id -u)
 export GROUP_ID := $(shell id -g)
 
 SHARED_NETWORK := life365-shared
+HEALTH_URL ?= http://localhost:8000/health
+REINDEX_URL ?= http://localhost:8000/admin/reindex
 
 upgrade:
 	rm -f requirements.txt
@@ -37,3 +39,7 @@ docker-down:
 	docker compose down -v
 	docker network rm $(SHARED_NETWORK) >/dev/null 2>&1 || true
 	docker image prune -a
+
+reindex:
+	@curl -fsS $(HEALTH_URL) >/dev/null
+	@curl -fsS -X POST $(REINDEX_URL)
