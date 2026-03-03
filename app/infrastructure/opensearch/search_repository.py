@@ -51,6 +51,17 @@ class OpenSearchRepository(SearchRepository):
             }
         }
 
+    def _build_exact_identifier_query(self, text: str) -> dict[str, Any]:
+        return {
+            "bool": {
+                "should": [
+                    {"term": {"isin": {"value": text}}},
+                    {"term": {"barcodes": {"value": text}}},
+                ],
+                "minimum_should_match": 1,
+            }
+        }
+
     def _build_filters(self, query: SearchQuery) -> list[dict[str, Any]]:
         filters: list[dict[str, Any]] = []
 
@@ -126,13 +137,18 @@ class OpenSearchRepository(SearchRepository):
             },
         }
 
-    async def search(self, query: SearchQuery) -> SearchResult:
+    def _build_search_body(
+        self,
+        query: SearchQuery,
+        *,
+        text_query: dict[str, Any],
+    ) -> dict[str, Any]:
         from_: int = (query.page - 1) * query.page_size
 
-        body: dict[str, Any] = {
+        return {
             "query": {
                 "bool": {
-                    "must": self._build_text_query(query),
+                    "must": text_query,
                     "filter": self._build_filters(query),
                 }
             },
@@ -142,18 +158,19 @@ class OpenSearchRepository(SearchRepository):
             "aggs": self._build_aggregations(),
         }
 
-        logger.debug(
-            "Executing search | text=%s | page=%d | size=%d",
-            query.text,
-            query.page,
-            query.page_size,
-        )
-
+    async def _execute_search(self, body: dict[str, Any]) -> dict[str, Any]:
         try:
-            response = await self._client.search(index=self._alias, body=body)
+            response: dict[str, Any] = await self._client.search(
+                index=self._alias, body=body
+            )
         except OpenSearchException:
             raise SearchUnavailableError("OpenSearch query failed")
 
+        return response
+
+    def _map_search_response(
+        self, response: dict[str, Any], query: SearchQuery
+    ) -> SearchResult:
         total = response["hits"]["total"]["value"]
         hits = response["hits"]["hits"]
         groups = self._map_groups(response)
@@ -169,6 +186,34 @@ class OpenSearchRepository(SearchRepository):
             results=results,
             groups=groups,
         )
+
+    async def search(self, query: SearchQuery) -> SearchResult:
+        logger.debug(
+            "Executing search | text=%s | page=%d | size=%d",
+            query.text,
+            query.page,
+            query.page_size,
+        )
+
+        if query.text:
+            exact_body: dict[str, Any] = self._build_search_body(
+                query,
+                text_query=self._build_exact_identifier_query(query.text),
+            )
+            exact_response = await self._execute_search(exact_body)
+            exact_total = exact_response["hits"]["total"]["value"]
+
+            if exact_total > 0:
+                logger.debug("Exact identifier match found: %d results", exact_total)
+                return self._map_search_response(exact_response, query)
+
+        body: dict[str, Any] = self._build_search_body(
+            query,
+            text_query=self._build_text_query(query),
+        )
+        response = await self._execute_search(body)
+
+        return self._map_search_response(response, query)
 
     def _extract_terms_group(
         self, aggregations_dict: dict[str, object], group_key: str

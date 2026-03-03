@@ -1,6 +1,6 @@
 {
   "name": "life365-search",
-  "version": "2.6.1",
+  "version": "2.7.0",
   "description": "Life365 Search",
   "scripts": {
     "update": "ncu -u"
@@ -16,7 +16,7 @@
   },
   "homepage": "https://github.com/inkloud/life365-portal-api#readme",
   "devDependencies": {
-    "@openai/codex": "^0.106.0",
+    "@openai/codex": "^0.107.0",
     "npm-check-updates": "^19.6.3"
   }
 }
