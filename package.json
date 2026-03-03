@@ -3,7 +3,8 @@
   "version": "2.7.0",
   "description": "Life365 Search",
   "scripts": {
-    "update": "ncu -u"
+    "update": "ncu -u",
+    "codex": "codex resume 019cb301-1267-75a0-bda2-372691d4dc7a"
   },
   "repository": {
     "type": "git",
