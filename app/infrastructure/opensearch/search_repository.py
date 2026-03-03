@@ -77,6 +77,12 @@ class OpenSearchRepository(SearchRepository):
         if query.brand:
             filters.append({"term": {"brand": query.brand}})
 
+        if query.type1:
+            filters.append({"term": {"type1": query.type1}})
+
+        if query.type2:
+            filters.append({"term": {"type2": query.type2}})
+
         filters.append({"term": {"is_available": query.is_available}})
         filters.append({"term": {"is_visible": query.is_visible}})
 

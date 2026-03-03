@@ -45,6 +45,20 @@ def test_build_text_query_without_text_uses_match_all():
     assert query == {"match_all": {}}
 
 
+def test_build_filters_includes_type_filters():
+    repo: OpenSearchRepository = OpenSearchRepository(client=SimpleNamespace())  # type: ignore[arg-type]
+
+    filters = repo._build_filters(
+        SearchQuery(type1="Toner Cartridge", type2="HP508A", brand="Pro-HP")
+    )
+
+    assert {"term": {"brand": "Pro-HP"}} in filters
+    assert {"term": {"type1": "Toner Cartridge"}} in filters
+    assert {"term": {"type2": "HP508A"}} in filters
+    assert {"term": {"is_available": True}} in filters
+    assert {"term": {"is_visible": True}} in filters
+
+
 @pytest.mark.asyncio
 async def test_search_returns_brand_groups_from_aggregations():
     response = {

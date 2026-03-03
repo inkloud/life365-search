@@ -10,6 +10,8 @@ class SearchQuery:
     category_level_3: int | None = None
 
     brand: str | None = None
+    type1: str | None = None
+    type2: str | None = None
 
     is_available: bool = True
     is_visible: bool = True
